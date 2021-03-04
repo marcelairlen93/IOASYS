@@ -1,0 +1,24 @@
+{
+   "type": "postgres",
+   "host": "localhost",
+   "port": 3306,
+   "username": "ioasys-test",
+   "password": "ioasys-test",
+   "database": "ioasys-test",
+   "synchronize": false,
+   "logging": false,
+   "entities": [
+      "src/models/**/*.ts"
+   ],
+   "migrations": [
+      "src/databse/migrations/**/*.ts"
+   ],
+   "subscribers": [
+      "src/subscriber/**/*.ts"
+   ],
+   "cli": {
+      "entitiesDir": "src/models",
+      "migrationsDir": "src/databse/migrations",
+      "subscribersDir": "src/subscriber"
+   }
+}
