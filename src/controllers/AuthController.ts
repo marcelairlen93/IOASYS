@@ -56,7 +56,7 @@ class AuthController {
     let user: User;
     try {
       user = await userRepository.findOneOrFail(id);
-    } catch (err) {
+    } catch (error) {
       res.status(401).send();
     }
 
