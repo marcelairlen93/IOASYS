@@ -16,15 +16,15 @@ const undoLastMigration = async (connection: Connection) => {
 };
 
 // Script to run all migrations
-// (async () => {
-//   const connection = await createConnection();
-//   await connection.runMigrations();
-//   console.log('[TypeORM]: Runned migrations');
-// })();
-
-// Script to undo all migrations
 (async () => {
   const connection = await createConnection();
-  await undoAllMigrations(connection);
-  console.log('[TypeORM]: Reverted all migrations');
+  await connection.runMigrations();
+  console.log('[TypeORM]: Runned migrations');
 })();
+
+// Script to undo all migrations
+// (async () => {
+//   const connection = await createConnection();
+//   await undoAllMigrations(connection);
+//   console.log('[TypeORM]: Reverted all migrations');
+// })();
