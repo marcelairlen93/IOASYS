@@ -1,57 +1,58 @@
 {
-  "name": "ioasys",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com:marcelairlen93/IOASYS.git",
-  "author": "Marcel Souza <masr@ecomp.poli.br>",
-  "license": "MIT",
-  "scripts": {
-    "start": "node dist/server.js",
-    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify src/server.ts",
-    "test": "jest",
-    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
-    "lint": "yarn eslint src --ext .ts",
-    "migrate": "yarn typeorm migration:run"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.7",
-    "@types/express": "^4.17.6",
-    "@types/jest": "^26.0.0",
-    "@types/jsonwebtoken": "^8.5.0",
-    "@types/jwk-to-pem": "^2.0.0",
-    "@types/morgan": "^1.9.1",
-    "@types/node": "^14.6.2",
-    "@typescript-eslint/eslint-plugin": "^4.16.1",
-    "@typescript-eslint/parser": "^4.16.1",
-    "eslint": "^7.21.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-import-helpers": "^1.1.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "jest": "^26.0.1",
-    "ts-jest": "^26.1.0",
-    "ts-node-dev": "^1.0.0-pre.49",
-    "tsconfig-paths": "^3.9.0",
-    "typescript": "^3.9.5"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "helmet": "^4.1.0",
-    "joi": "^17.2.1",
-    "jsonwebtoken": "^8.5.1",
-    "jwk-to-pem": "^2.0.4",
-    "morgan": "^1.10.0",
-    "pg": "^8.3.3",
-    "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.25"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ]
-  }
+   "name": "ioasys",
+   "version": "1.0.0",
+   "main": "index.js",
+   "repository": "git@github.com:marcelairlen93/IOASYS.git",
+   "author": "Marcel Souza <masr@ecomp.poli.br>",
+   "license": "MIT",
+   "scripts": {
+      "start": "ts-node src/index.ts",
+      "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify src/server.ts",
+      "test": "jest",
+      "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
+      "lint": "yarn eslint src --ext .ts",
+      "migrate": "yarn typeorm migration:run"
+   },
+   "devDependencies": {
+      "@types/cors": "^2.8.7",
+      "@types/express": "^4.17.6",
+      "@types/jest": "^26.0.0",
+      "@types/jsonwebtoken": "^8.5.0",
+      "@types/jwk-to-pem": "^2.0.0",
+      "@types/morgan": "^1.9.1",
+      "@types/node": "^8.0.29",
+      "@typescript-eslint/eslint-plugin": "^4.16.1",
+      "@typescript-eslint/parser": "^4.16.1",
+      "eslint": "^7.21.0",
+      "eslint-config-airbnb-base": "^14.2.1",
+      "eslint-config-standard": "^14.1.1",
+      "eslint-plugin-import": "^2.22.1",
+      "eslint-plugin-import-helpers": "^1.1.0",
+      "eslint-plugin-node": "^11.1.0",
+      "eslint-plugin-promise": "^4.2.1",
+      "jest": "^26.0.1",
+      "ts-jest": "^26.1.0",
+      "ts-node-dev": "^1.0.0-pre.49",
+      "tsconfig-paths": "^3.9.0",
+      "typescript": "3.3.3333",
+      "ts-node": "3.3.0"
+   },
+   "dependencies": {
+      "cors": "^2.8.5",
+      "express": "^4.17.1",
+      "helmet": "^4.1.0",
+      "joi": "^17.2.1",
+      "jsonwebtoken": "^8.5.1",
+      "jwk-to-pem": "^2.0.4",
+      "morgan": "^1.10.0",
+      "pg": "^8.4.0",
+      "reflect-metadata": "^0.1.10",
+      "typeorm": "0.2.31"
+   },
+   "jest": {
+      "testEnvironment": "node",
+      "coveragePathIgnorePatterns": [
+         "/node_modules/"
+      ]
+   }
 }
