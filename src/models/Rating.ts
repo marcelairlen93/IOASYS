@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  Column,
 } from 'typeorm';
 
 import Film from '@models/Film';
@@ -22,6 +23,9 @@ export default class Rating {
 
     @ManyToOne(() => Film, (film) => film.ratings)
     film: Film;
+
+    @Column()
+    rating: ['0', '1', '2', '3', '4']
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;

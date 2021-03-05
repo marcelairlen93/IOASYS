@@ -3,7 +3,7 @@ import { getRepository } from 'typeorm';
 
 import User from '@models/User';
 
-export const checkRole = (
+const Permissioner = (
   roles: string[],
 ) => async (req: Request, res: Response, next: NextFunction):Promise<any> => {
   // Get the user ID from previous midleware
@@ -23,3 +23,5 @@ export const checkRole = (
     next();
   } else res.status(401).send();
 };
+
+export default Permissioner;

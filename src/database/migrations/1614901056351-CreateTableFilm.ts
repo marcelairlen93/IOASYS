@@ -16,6 +16,7 @@ export class CreateTableFilm1614901056351 implements MigrationInterface {
           name: 'title',
           type: 'varchar',
           isNullable: false,
+          isUnique: true,
         },
         {
           name: 'synopsis',

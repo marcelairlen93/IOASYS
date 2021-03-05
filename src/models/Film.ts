@@ -26,16 +26,24 @@ export default class Film {
     @Column({ name: 'is_enabled' })
     enabled: boolean;
 
-    @OneToMany(() => Rating, (rating) => rating.film)
+    @OneToMany(() => Rating, (rating) => rating.film, {
+      eager: true,
+    })
     ratings: Rating[];
 
-    @OneToMany(() => FilmDirector, (directors) => directors.director)
+    @OneToMany(() => FilmDirector, (directors) => directors.director, {
+      eager: true,
+    })
     directors: FilmDirector[];
 
-    @OneToMany(() => FilmActor, (actors) => actors.actor)
+    @OneToMany(() => FilmActor, (actors) => actors.actor, {
+      eager: true,
+    })
     actors: FilmActor[];
 
-    @OneToMany(() => FilmGenre, (genres) => genres.genre)
+    @OneToMany(() => FilmGenre, (genres) => genres.genre, {
+      eager: true,
+    })
     genres: FilmGenre[];
 
     @CreateDateColumn({ name: 'created_at' })

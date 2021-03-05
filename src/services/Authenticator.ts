@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken';
 
 import config from '../config/config';
 
-export const checkJwt = (req: Request, res: Response, next: NextFunction): Promise<any> => {
+const Authenticator = (req: Request, res: Response, next: NextFunction): Promise<any> => {
   // Get the jwt token from the head
   const token = <string>req.headers.auth;
   let jwtPayload;
@@ -29,3 +29,5 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction): Promi
   // Call the next middleware or controller
   next();
 };
+
+export default Authenticator;
