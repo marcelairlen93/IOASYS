@@ -1,6 +1,6 @@
 import { validate } from 'class-validator';
 import { Request, Response } from 'express';
-import { getCustomRepository, getRepository } from 'typeorm';
+import { getConnection, getCustomRepository, getRepository } from 'typeorm';
 
 import Actor from '@models/Actor';
 import Director from '@models/Director';
@@ -9,6 +9,7 @@ import FilmActor from '@models/FilmActor';
 import FilmDirector from '@models/FilmDirector';
 import FilmGenre from '@models/FilmGenre';
 import Genre from '@models/Genre';
+import Rating from '@models/Rating';
 import FilmRepository from '@repositories/FilmRepository';
 
 class FilmController {
@@ -27,7 +28,7 @@ static list = async (req: Request, res: Response):Promise<any> => {
   }
 
   // Send the films object
-  res.send(films);
+  return res.send(films);
 };
 
 static getOneById = async (req: Request, res: Response):Promise<any> => {
@@ -36,20 +37,38 @@ static getOneById = async (req: Request, res: Response):Promise<any> => {
 
   // Get the film from database
   const filmRepository = getRepository(Film);
+
   try {
     const film = await filmRepository.findOneOrFail(id);
 
-    res.send(film);
+    // Get the ratings
+    const ratingRepo = getRepository(Rating);
+    const ratings = await ratingRepo.find({
+      where: {
+        film: id,
+      },
+      select: ['rating'],
+    });
+
+    let avgRatings = 0;
+    if (ratings.length) {
+      avgRatings = (ratings.reduce((acc, el) => acc + (+el.rating), 0) / ratings.length);
+    }
+
+    res.status(200).send({
+      ...film,
+      ratings: avgRatings,
+    });
   } catch (error) {
     res.status(404).send('film not found');
   }
 };
 
-static create = async (req: Request, res: Response): Promise<any> => {
+static create = async (req: Request, res: Response): Promise<Response> => {
   // Get parameters from the body
   const {
     title, actors, directors, genres, synopsis,
-  }: Film = req.body;
+  } = req.body;
 
   const filmRepository = getRepository(Film);
   const actorRepository = getRepository(Actor);
@@ -67,35 +86,129 @@ static create = async (req: Request, res: Response): Promise<any> => {
 
   const film = new Film();
 
-  const actorArr = actors.map((actor: Actor) => {
+  film.title = title;
+  film.synopsis = synopsis;
+
+  const actorsArr = actors.map((actor: Actor) => {
     const newActor = new Actor();
     newActor.name = actor.name;
 
     return newActor;
   });
-  film.title = title;
-  film.synopsis = synopsis;
 
-  film.actors = actors;
-  film.directors = directors;
-  film.genres = genres;
+  const directorsArr = directors.map((director: Director) => {
+    const newDirector = new Director();
+    newDirector.name = director.name;
 
-  // Validade if the parameters are ok
-  const errors = await validate(film);
-  if (errors.length > 0) {
-    res.status(400).send(errors);
-    return;
-  }
+    return newDirector;
+  });
+
+  const genresArr = genres.map((genre: Genre) => {
+    const newGenre = new Genre();
+    newGenre.name = genre.name;
+
+    return newGenre;
+  });
+
+  // Starting transactions
+  const connection = getConnection();
+  const queryRunner = connection.createQueryRunner();
+
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
 
   try {
-    await filmRepository.save(film);
-  } catch (e) {
-    res.status(409).send('film already exists');
-    return;
-  }
+    const directorsPromises = directorsArr.map(async (newDirector: Director) => {
+      // Validade if the parameters are ok
+      const errors = await validate(newDirector);
+      if (errors.length > 0) {
+        return res.status(400).send(errors);
+      }
 
-  // If all ok, send 201 response
-  res.status(201).send('film created');
+      const directorExists = await directorRepository.findOne({ name: newDirector.name });
+
+      if (!directorExists) {
+        return queryRunner.manager.save(Director, newDirector);
+      }
+      return directorExists;
+    });
+
+    const actorsPromises = actorsArr.map(async (newActor: Actor) => {
+      // Validade if the parameters are ok
+      const errors = await validate(newActor);
+      if (errors.length > 0) {
+        return res.status(400).send(errors);
+      }
+
+      const actorExists = await actorRepository.findOne({ name: newActor.name });
+
+      if (!actorExists) {
+        return queryRunner.manager.save(Director, newActor);
+      }
+      return actorExists;
+    });
+
+    const genresPromises = genresArr.map(async (newGenre: Genre) => {
+      // Validade if the parameters are ok
+      const errors = await validate(newGenre);
+      if (errors.length > 0) {
+        return res.status(400).send(errors);
+      }
+
+      const genreExists = await genreRepository.findOne({ name: newGenre.name });
+
+      if (!genreExists) {
+        return queryRunner.manager.save(Director, newGenre);
+      }
+      return genreExists;
+    });
+
+    const newDirectors = await Promise.all(directorsPromises);
+    const newActors = await Promise.all(actorsPromises);
+    const newGenres = await Promise.all(genresPromises);
+
+    const newFilmDirectors = [];
+    const newFilmActors = [];
+    const newFilmGenres = [];
+
+    for (const newFilmDirector of newFilmDirectors) {
+      const item = await queryRunner.manager.save(FilmDirector, newFilmDirector);
+    }
+
+    // TODO CREATE ACTORS IF THEY DON'T EXISTS
+    // TODO CREATE GENRES IF THEY DON'T EXISTS
+    // TODO CREATE RELATION ENTITY BETWEEN ACTORS AND FILMS
+    // TODO CREATE RELATION ENTITY BETWEEN DIRECTORS AND FILMS
+    // TODO CREATE RELATION ENTITY BETWEEN GENRES AND FILMS
+    // TODO UPDATE FILM OBJECT TO REFLECT NEW DATA RELATIONS
+
+    // Validade if the parameters are ok
+    const errors = await validate(film);
+    if (errors.length > 0) {
+      return res.status(400).send(errors);
+    }
+
+    // Finishing transaction
+    await queryRunner.commitTransaction();
+    return res.status(200).json({
+      success: true,
+      data: film,
+      message: null,
+    });
+  } catch (error) {
+    console.log(error);
+    // Undo everything inside transaction
+    await queryRunner.rollbackTransaction();
+
+    return response.status(500).json({
+      success: false,
+      message: error.message || 'Erro inesperado',
+      data: null,
+    });
+  } finally {
+    // Releasing transaction
+    await queryRunner.release();
+  }
 };
 
 static update = async (req: Request, res: Response): Promise<any> => {

@@ -25,7 +25,7 @@ export default class Rating {
     film: Film;
 
     @Column()
-    rating: ['0', '1', '2', '3', '4']
+    rating: [0 | 1 | 2 | 3 | 4]
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
