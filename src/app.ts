@@ -1,7 +1,12 @@
 import cors from 'cors';
-import express, { Request, Response } from 'express';
+import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
+
+import AuthRoutes from '@routes/AuthRoutes';
+import FilmRoutes from '@routes/FilmRoutes';
+import RatingRoutes from '@routes/RatingRoutes';
+import UserRoutes from '@routes/UserRoutes';
 
 const app = express();
 
@@ -11,8 +16,9 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json({ limit: '25mb' }));
 
-app.get('/', (request: Request, response: Response): Response => response.json({
-  message: 'API Working',
-}));
+app.use('/auth', AuthRoutes);
+app.use('/user', UserRoutes);
+app.use('/film', FilmRoutes);
+app.use('/rating', RatingRoutes);
 
 export default app;

@@ -13,7 +13,9 @@ export default class FilmDirector {
     @ManyToOne(() => Film, (film) => film.id)
     film: Film;
 
-    @ManyToOne(() => Director, (director) => director.id)
+    @ManyToOne(() => Director, (director) => director.id, {
+      eager: true,
+    })
     @Column({ name: 'director_id' })
     director: Director;
 

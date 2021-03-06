@@ -13,7 +13,9 @@ export default class FilmGenre {
     @ManyToOne(() => Film, (film) => film.id)
     film: Film;
 
-    @ManyToOne(() => Genre, (genre) => genre.id)
+    @ManyToOne(() => Genre, (genre) => genre.id, {
+      eager: true,
+    })
     @Column({ name: 'genre_id' })
     genre: Genre;
 

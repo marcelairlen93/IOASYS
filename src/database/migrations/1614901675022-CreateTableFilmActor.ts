@@ -16,11 +16,13 @@ export class CreateTableFilmActor1614901675022 implements MigrationInterface {
           name: 'film_id',
           type: 'uuid',
           isNullable: false,
+          isUnique: true,
         },
         {
           name: 'actor_id',
           type: 'uuid',
           isNullable: false,
+          isUnique: true,
         },
         {
           name: 'created_at',
