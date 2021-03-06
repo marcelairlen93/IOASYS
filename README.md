@@ -36,6 +36,16 @@ Para saber como foi desenhado o banco de dados acesse: [Diagrama de BD](https://
 
 **Ps: Infelizmente não foi possível completar todos os requisitos do teste**
 
+## tecnologias e pacotes utilizados:
+- NodeJS
+- TypeORM
+- Docker
+- EsLint
+- Typescript
+- Postgres
+- JWT
+- BCrypt
+
 ---
 
 # Sobre
