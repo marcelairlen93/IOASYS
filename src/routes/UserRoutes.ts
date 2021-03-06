@@ -22,22 +22,20 @@ router.route('/:id').get(
 
 // Create a new user
 router.route('/').post(
-  Authenticator,
-  Permissioner(['ADMIN']),
   UserController.create,
 );
 
 // Edit one user
 router.route('/:id').patch(
   Authenticator,
-  Permissioner(['ADMIN']),
+  Permissioner(['USER', 'ADMIN']),
   UserController.update,
 );
 
 // Delete one user
 router.route('/:id').delete(
   Authenticator,
-  Permissioner(['ADMIN']),
+  Permissioner(['USER', 'ADMIN']),
   UserController.delete,
 );
 
