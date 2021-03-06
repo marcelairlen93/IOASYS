@@ -216,11 +216,11 @@ static update = async (req: Request, res: Response): Promise<any> => {
   const { id } = req.params;
 
   // Get values from the body
-  const { email, role, enabled } = req.body;
+  const { enabled } = req.body;
 
   // Try to find film on database
   const filmRepository = getRepository(Film);
-  let film;
+  let film: Film;
   try {
     film = await filmRepository.findOneOrFail(id);
   } catch (error) {
@@ -230,8 +230,6 @@ static update = async (req: Request, res: Response): Promise<any> => {
   }
 
   // Validate the new values on model
-  film.email = email;
-  film.role = role;
   film.enabled = enabled;
   const errors = await validate(film);
   if (errors.length > 0) {

@@ -1,3 +1,53 @@
+# Esquema de banco de dados
+
+Para saber como foi desenhado o banco de dados acesse: [Diagrama de BD](https://drive.google.com/file/d/1hXjWmuN_UVuR-gkL8ZA2pvhBbt527COg/view?usp=sharing)
+
+# Preparação de ambientes e testes
+- Você deve ter o docker instalado na máquina
+- Executar no terminal ```docker run --name ioasys-db -e POSTGRES_USER=ioasys-test -e POSTGRES_PASSWORD=ioasys-test -e POSTGRES_DB=ioasys-test -p 5432:5432 -d postgres``` para criar o banco de dados
+- Você deve acessar o banco de dados via terminal ou por algum client como o PGAdmin ou DBeaver
+- Você deve realizar dois **insert** no banco de dados, na tabela **user_roles**, o primeiro passando ```name = ADMIN``` e o segundo ```name = USER```
+- Após isso você deve realizar o clone deste repositório para a sua máquina
+- Vocẽ deve executar no terminal, na pasta do projeto, `yarn` ou `npm -i`
+- Por fim você poderá ter o projeto rodando com `yarn dev`
+
+**Ps: Para execução de testes você pode utilizar postman ou insomnia, as rotas estarão declaradas abaixo** ~(por falta de tempo para documentar no swagger)~
+# Rotas
+## Auth
+- `POST` -> `http://localhost:3333/auth/login` => Rota responsável por logar o usuário, recebe `{ "email": "string", "password": "string" }` como body
+- `POST` -> `http://localhost:3333/auth/change-password` => Rota responsável por mudar a senha de um usuário, recebe `{ "oldPassword": "string", "newPassword": "string" }` como body
+
+## Usuários (Admin e usuário comum)
+- `GET` -> `http://localhost:3333/user/` => Rota responsável por trazer uma lista com todos os usuários cadastrados (apenas ADMIN possui acesso)
+- `GET` -> `http://localhost:3333/user/:id` => Rota responsável por buscar um usuário pelo seu ID (apenas ADMIN possui acesso)
+- `POST` -> `http://localhost:3333/user/` => Rota responsável por CRIAR um usuário, recebe `{ "email": "string", "password": "string", "role": "ADMIN" || "USER" }` como body
+- `PATCH` -> `http://localhost:3333/user/:id` => Rota responsável por EDITAR um usuário, recebe `{ "email": "string", "role": "ADMIN" || "USER", "enabled": "boolean" }` como body (usuário logados podem acessar) ~(falta validar para o usuário comum ser permitido alterar apenas o seu próprio usuário)~
+- `DELETE` -> `http://localhost:3333/user/:id` => Rota responsável por DESABILITAR um usuário (apenas ADMIN possui acesso)
+
+## Filme (Admin e usuário comum)
+- `GET` -> `http://localhost:3333/film/` => Rota responsável por trazer uma lista com todos os filmes cadastrados (todos os usuário, e visitante, possuem acesso) ou (se for passado um termo de busca `?search="titulo | genero | diretor | ator"` a lista virá filtrada pelas ocorrências que fazem match com o termo)
+- `GET` -> `http://localhost:3333/film/:id` => Rota responsável por buscar um filme pelo seu ID e trazer seus detalhes (todos os usuários, e visitante, possuem acesso)
+- `POST` -> `http://localhost:3333/film/` => Rota responsável por CADASTRAR um filme, recebe `{"title": "string", "actors": ["string"], "directors": ["string"], "genres": ["string"], "synopsis": "string" }` como body (apenas ADMIN possui acesso) ~(NÃO FUNCIONAL, sem tempo hábil para desenvolver)~
+- `PATCH` -> `http://localhost:3333/film/:id` => Rota responsável por EDITAR um filme, recebe `{"title": "string", "actors": ["string"], "directors": ["string"], "genres": ["string"], "synopsis": "string" }` como body ~(NÃO FUNCIONAL, sem tempo hábil para desenvolver)~
+- `DELETE` -> `http://localhost:3333/film/:id` => Rota responsável por DESABILITAR um filme (apenas ADMIN possui acesso)
+
+## Voto (Usuário comum)
+- `GET` -> `http://localhost:3333/rating/` => Rota responsável por cadastrar um voto recebe `{"filmId": "string", "rating": [0 | 1 | 2 | 3 | 4] }` como body (apenas usuários comuns possuem acesso)
+
+**Ps: Infelizmente não foi possível completar todos os requisitos do teste**
+
+## tecnologias e pacotes utilizados:
+- NodeJS
+- TypeORM
+- Docker
+- EsLint
+- Typescript
+- Postgres
+- JWT
+- BCrypt
+
+---
+
 # Sobre
 
 Estes documento README tem como objetivo fornecer as informações necessárias para realização do projeto de avaliação de candidatos.
